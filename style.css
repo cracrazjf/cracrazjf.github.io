@@ -1,129 +1,137 @@
 :root {
-  --bg: #ffffff;
-  --text: #24292f;
-  --muted: #5f6b76;
-  --line: #e3e6ea;
-  --link: #1a5fb4;
-  --accent: #13294b;
-  --chip: #f3f5f7;
+  --page: #f5f5f5;
+  --card: #ffffff;
+  --text: #333333;
+  --strong: #000000;
+  --muted: #5a5a5a;
+  --line: rgba(0, 0, 0, 0.25);
+  --soft: #f3f6fb;
+  --link: #0645ad;
+  --link-hover: #04317c;
+  --accent: #c8502b;
+  --label: #0645ad;
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #14171a;
-    --text: #e6e8ea;
-    --muted: #9aa4ae;
-    --line: #2b3137;
-    --link: #7ab4f5;
-    --accent: #e6e8ea;
-    --chip: #1d2226;
+    --page: #111315;
+    --card: #1b1e21;
+    --text: #d8dadd;
+    --strong: #ffffff;
+    --muted: #a3a9b0;
+    --line: rgba(255, 255, 255, 0.28);
+    --soft: #22272d;
+    --link: #8ab4f8;
+    --link-hover: #b3cdfb;
+    --accent: #ff9a76;
+    --label: #8ab4f8;
   }
 }
 
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; scroll-padding-top: 64px; }
+html { scroll-behavior: smooth; }
 body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-family: "Trebuchet MS", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 15.5px;
-  line-height: 1.6;
+  margin: 0; padding: 20px;
+  background: var(--page); color: var(--text);
+  font: 400 16px/1.55 "Lato", Verdana, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 a { color: var(--link); text-decoration: none; }
-a:hover { text-decoration: underline; }
+a:hover { color: var(--link-hover); text-decoration: underline; }
+strong { color: var(--strong); }
+p { margin: 0 0 10px; }
 
-/* ---- top bar ---- */
-.masthead {
-  position: sticky; top: 0; z-index: 10;
-  background: var(--bg);
-  border-bottom: 1px solid var(--line);
+.wrapper {
+  background: var(--card); max-width: 950px; margin: 0 auto; padding: 40px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-.nav {
-  max-width: 1080px; margin: 0 auto; padding: 12px 20px;
-  display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
-}
-.nav-home { font-weight: 700; color: var(--accent); }
-.nav-links { display: flex; gap: 18px; flex-wrap: wrap; }
-.nav-links a { color: var(--muted); font-size: 14.5px; }
-.nav-links a:hover { color: var(--link); text-decoration: none; }
 
-/* ---- two columns ---- */
-.layout {
-  max-width: 1080px; margin: 0 auto; padding: 32px 20px 48px;
-  display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 44px;
-}
-.sidebar { position: sticky; top: 84px; align-self: start; }
-
+/* ---- header ---- */
+.intro { display: flex; flex-direction: row-reverse; gap: 28px; align-items: flex-start; margin-bottom: 14px; }
+.intro-text { flex: 1; min-width: 0; }
 .avatar {
-  width: 170px; height: 170px; border-radius: 50%; overflow: hidden; position: relative;
-  background: var(--chip); border: 1px solid var(--line);
+  width: 150px; height: 150px; flex: none; position: relative; overflow: hidden;
+  background: var(--soft); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   display: flex; align-items: center; justify-content: center;
 }
-.avatar span { font-size: 54px; font-weight: 700; color: var(--muted); letter-spacing: 1px; }
+.avatar span { font-size: 46px; font-weight: 700; color: var(--muted); }
 .avatar img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.name { font-size: 32px; font-weight: 700; line-height: 1.2; margin: 0 0 8px; color: var(--strong); }
+.role { color: var(--muted); font-size: 18px; margin: 0 0 12px; }
+.contact { list-style: none; margin: 0; padding: 0; }
+.contact li { display: flex; align-items: center; gap: 9px; padding: 2px 0; }
+.contact svg { width: 16px; height: 16px; flex: none; color: var(--muted); }
 
-.name { font-size: 21px; line-height: 1.25; margin: 18px 0 6px; color: var(--accent); }
-.affiliation { margin: 0 0 16px; color: var(--muted); font-size: 14.5px; line-height: 1.45; }
-.contact { list-style: none; margin: 0; padding: 0; font-size: 14.5px; }
-.contact li { padding: 5px 0; border-top: 1px solid var(--line); overflow-wrap: anywhere; }
-.contact .label { display: inline-block; width: 68px; color: var(--muted); }
-
-/* ---- main column ---- */
-main section { margin-bottom: 34px; }
-main p { margin: 0 0 12px; }
-h2 {
-  font-size: 22px; margin: 0 0 14px; padding-bottom: 6px;
-  color: var(--accent); border-bottom: 1px solid var(--line);
+.jump {
+  display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 0 0 26px; padding: 9px 0;
+  border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  font-size: 14px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700;
 }
-h3 { font-size: 16.5px; margin: 0 0 2px; }
-h3.group { font-size: 15px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); margin: 18px 0 8px; }
 
-.entries { list-style: none; margin: 0; padding: 0; }
-.entries li { display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 14px; padding: 6px 0; }
-.entries .when { color: var(--muted); font-style: italic; }
-
-.section-lead { color: var(--muted); }
-.project { margin: 0 0 30px; padding-top: 22px; border-top: 1px solid var(--line); }
-.project:first-of-type { border-top: 0; padding-top: 4px; }
-.project h3 { font-size: 18.5px; line-height: 1.35; color: var(--accent); }
-.project .meta { color: var(--muted); font-size: 14.5px; margin-bottom: 12px; }
-.project .plain { margin-bottom: 12px; }
-.project .plain li { padding: 3px 0; }
-
-/* figures are drawn on white, so they sit on a white card in both themes */
-figure { margin: 16px 0 18px; }
-figure img {
-  display: block; width: 100%; height: auto;
-  background: #ffffff; border: 1px solid var(--line); border-radius: 6px; padding: 10px;
+/* ---- sections ---- */
+.section { margin-bottom: 30px; }
+.section-title {
+  text-transform: uppercase; font-size: 20px; font-weight: 700; color: var(--strong);
+  margin: 0 0 12px; padding-bottom: 2px; border-bottom: 1px dashed var(--line);
 }
-figure a { display: block; }
-figcaption { color: var(--muted); font-size: 13.5px; line-height: 1.5; margin-top: 7px; }
-.figure-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.figure-pair figure { margin-top: 12px; }
+.section-lead { color: var(--muted); margin-bottom: 18px; }
+.callout {
+  background: var(--soft); border-left: 4px solid var(--accent); padding: 9px 14px; margin-top: 12px;
+  font-weight: 700; color: var(--strong);
+}
+.subhead { font-size: 14px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin: 20px 0 10px; }
 
-.pubs { list-style: none; margin: 0; padding: 0; }
-.pubs li { padding: 8px 0 8px 14px; border-left: 3px solid var(--line); margin-bottom: 8px; }
-.pubs span { display: block; }
-.pubs .title { font-weight: 700; }
-.pubs .authors { color: var(--text); font-size: 14.5px; }
-.pubs .venue { color: var(--muted); font-style: italic; font-size: 14.5px; }
-.pubs .desc { color: var(--text); font-size: 14.5px; margin-top: 2px; }
-
-.plain { margin: 0; padding-left: 20px; }
+/* ---- research projects ---- */
+.project { margin: 0 0 30px; padding: 18px 20px 6px; background: var(--card); border: 1px solid var(--line); border-top: 4px solid var(--link); }
+.project-title { font-size: 19px; font-weight: 700; line-height: 1.35; color: var(--strong); margin: 0 0 3px; }
+.project-people { font-size: 14px; margin: 0; }
+.project-status { font-size: 14px; font-style: italic; color: var(--accent); margin: 0 0 12px; }
+.rows { border-top: 1px dashed var(--line); }
+.row { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 18px; padding: 12px 0 4px; border-bottom: 1px dashed var(--line); }
+.row:last-child { border-bottom: 0; }
+.label {
+  font-size: 12.5px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.07em;
+  color: var(--label); padding-top: 3px;
+}
+.row .text > p:last-child { margin-bottom: 8px; }
+.plain { margin: 0 0 10px; padding-left: 20px; }
 .plain li { padding: 2px 0; }
 
-.site-footer { color: var(--muted); font-size: 13.5px; border-top: 1px solid var(--line); padding-top: 14px; }
+/* figures are drawn on white, so they keep a white card in both themes */
+figure { margin: 12px 0 14px; }
+figure a { display: block; }
+figure img { display: block; width: 100%; height: auto; background: #ffffff; border: 1px solid var(--line); padding: 10px; }
+figcaption { color: var(--muted); font-size: 13.5px; line-height: 1.5; margin-top: 6px; }
+.figure-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+/* ---- publications ---- */
+.pub { margin-bottom: 16px; padding-left: 14px; border-left: 3px solid var(--link); }
+.pub p { margin: 0; }
+.pub-title { font-weight: 700; color: var(--strong); }
+.pub-authors, .pub-venue { font-size: 14.5px; }
+.pub-venue { font-style: italic; }
+.pub-note { font-size: 14px; font-style: italic; color: var(--accent); }
+
+/* ---- education, software, honors, teaching ---- */
+.item { margin-bottom: 9px; }
+.upper { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
+.org { font-weight: 700; color: var(--strong); }
+.time { color: var(--muted); font-size: 14px; white-space: nowrap; flex: none; }
+.lower { font-style: italic; font-size: 14.5px; }
+.item-text { font-size: 14.5px; margin: 3px 0 0; }
+
+.footer { padding-top: 12px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13.5px; }
 
 /* ---- phones ---- */
-@media (max-width: 760px) {
-  .layout { grid-template-columns: 1fr; gap: 24px; padding-top: 22px; }
-  .sidebar { position: static; display: grid; grid-template-columns: 96px 1fr; column-gap: 16px; align-items: center; }
-  .avatar { width: 96px; height: 96px; grid-row: span 2; }
-  .avatar span { font-size: 32px; }
-  .name { margin: 0 0 4px; }
-  .affiliation { margin: 0; }
-  .contact { grid-column: 1 / -1; margin-top: 14px; }
-  .entries li { grid-template-columns: 1fr; gap: 0; }
+@media (max-width: 700px) {
+  body { padding: 0; }
+  .wrapper { padding: 18px 16px; box-shadow: none; }
+  .intro { flex-direction: column; align-items: center; gap: 12px; text-align: center; }
+  .avatar { width: 110px; height: 110px; border-radius: 50%; }
+  .contact li { justify-content: center; }
+  .name { font-size: 26px; }
+  .role { font-size: 16px; }
+  .project { padding: 14px 14px 4px; }
+  .row { grid-template-columns: 1fr; gap: 2px; }
   .figure-pair { grid-template-columns: 1fr; gap: 0; }
-  .nav-links { gap: 12px; }
+  .upper { flex-direction: column; gap: 0; }
 }
