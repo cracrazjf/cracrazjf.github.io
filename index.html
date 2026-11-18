@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jingfeng (Craig) Zhang</title>
+<meta name="description" content="Jingfeng (Craig) Zhang, Ph.D. student in cognitive psychology at UIUC, working on continual learning, memory, reasoning, and metacognition in language models.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="masthead">
+  <nav class="nav">
+    <a class="nav-home" href="#top">Jingfeng (Craig) Zhang</a>
+    <div class="nav-links">
+      <a href="#about">About</a>
+      <a href="#education">Education</a>
+      <a href="#research">Research</a>
+      <a href="#publications">Publications</a>
+      <a href="#software">Software</a>
+      <a href="#honors">Honors</a>
+    </div>
+  </nav>
+</header>
+
+<div class="layout" id="top">
+
+  <aside class="sidebar">
+    <!-- Put a square headshot at assets/photo.jpg and it replaces the initials. -->
+    <div class="avatar">
+      <img src="assets/photo.jpg" alt="Jingfeng (Craig) Zhang" onerror="this.remove()">
+      <span aria-hidden="true">JZ</span>
+    </div>
+    <h1 class="name">Jingfeng (Craig) Zhang</h1>
+    <p class="affiliation">Ph.D. student, Cognitive Psychology<br>University of Illinois Urbana-Champaign</p>
+    <ul class="contact">
+      <li><span class="label">Location</span> Champaign, Illinois</li>
+      <li><span class="label">Email</span> <a href="mailto:jz44@illinois.edu">jz44@illinois.edu</a></li>
+      <li><span class="label">GitHub</span> <a href="https://github.com/cracrazjf">cracrazjf</a></li>
+      <li><span class="label">CV</span> <a href="cv/Jingfeng_Zhang_CV.pdf">Download (PDF)</a></li>
+    </ul>
+  </aside>
+
+  <main>
+
+    <section id="about">
+      <p>
+        I am a Ph.D. student in cognitive psychology at the University of Illinois Urbana-Champaign, advised by
+        Professor Jon Willits. I also work
+        closely with Professor Aaron Benjamin. My research focuses on memory and metacognition in language models,
+        with an emphasis on continual learning, memory consolidation and replay, confidence and calibration in
+        reasoning models, and tool use in LLM agents.
+      </p>
+      <p>
+        I draw on cognitive science and design controlled synthetic data to build and evaluate models that know what
+        they know and keep learning. I am looking for a Summer 2027 research internship.
+      </p>
+    </section>
+
+    <section id="education">
+      <h2>Education</h2>
+      <ul class="entries">
+        <li>
+          <span class="when">Expected Dec 2027</span>
+          <span class="what"><strong>Ph.D. in Psychology (Cognitive Psychology)</strong>, University of Illinois Urbana-Champaign<br>
+          Advisor: Prof. Jon A. Willits</span>
+        </li>
+        <li>
+          <span class="when">May 2022</span>
+          <span class="what"><strong>M.S. in Psychological Science</strong>, University of Illinois Urbana-Champaign</span>
+        </li>
+        <li>
+          <span class="when">May 2020</span>
+          <span class="what"><strong>B.S. in Psychology</strong>, University of Illinois Urbana-Champaign</span>
+        </li>
+      </ul>
+    </section>
+
+    <section id="research">
+      <h2>Research</h2>
+      <p class="section-lead">
+        My projects share one question: how does a learning system keep track of what it knows? I study it from
+        two sides. The memory side asks how a model can add new knowledge without losing the old. The
+        metacognition side asks whether a model's confidence tells the truth about its knowledge.
+      </p>
+
+      <article class="project" id="cls">
+        <h3>Complementary learning systems for continual learning in language models</h3>
+        <p class="meta">Dissertation, in progress · with Jon A. Willits</p>
+
+        <p><strong>The problem.</strong> A language model stops learning the day it is deployed. Fine-tuning it on
+        new information overwrites what it already knew, a failure known as catastrophic forgetting. Retrieval
+        avoids this by storing text outside the model, but the model never actually learns what it retrieves.
+        People do not have this problem. The theory of complementary learning systems (McClelland, McNaughton,
+        and O'Reilly, 1995) explains why: the hippocampus records new experience quickly, and the neocortex
+        absorbs it slowly through replay during sleep.</p>
+
+        <p><strong>The approach.</strong> I am building this design for language models. A slow language model
+        plays the role of the cortex, and a fast episodic store plays the role of the hippocampus. Three ideas
+        define the model:</p>
+        <ul class="plain">
+          <li><strong>Prediction error decides what is worth remembering.</strong> The store keeps only what the
+          language model cannot yet predict, so memory stays compact and complements the model.</li>
+          <li><strong>Consolidation is targeted offline replay.</strong> At night the store is replayed into the
+          language model, and measured interference decides which old knowledge to rehearse alongside it.</li>
+          <li><strong>A memory is released once it is learned.</strong> When the language model can predict a
+          memory on its own, the store lets it go.</li>
+        </ul>
+
+        <p><strong>A world with a right answer.</strong> Natural text is too noisy to say what a model should
+        know. I therefore built a synthetic-world corpus, grounded in the semantic network of Rogers and
+        McClelland (2004), in which every fact, its frequency, and the correct next-word probabilities are set by
+        design. The model first learns a world of animals and plants. It then meets a penguin: a bird that swims
+        and does not fly. Every measurement of learning, forgetting, and interference is scored against the exact
+        correct distribution.</p>
+
+        <p><strong>Preliminary results.</strong> With an LSTM language model and five random seeds, the episodic
+        store learns the new facts faster than fine-tuning on the same sentences, and it leaves old knowledge
+        untouched. After one reading of each new sentence the error on the new facts is 0.20 with the store and
+        0.33 with fine-tuning. Error on old knowledge stays at 0.025 with the store and rises to 0.090 with
+        fine-tuning after five readings.</p>
+
+        <figure>
+          <a href="assets/research/cls_store_vs_finetune.png" title="Open the full-size figure"><img src="assets/research/cls_store_vs_finetune.png" alt="Two line charts comparing a fine-tuned language model with a frozen language model plus an episodic store" loading="lazy"></a>
+          <figcaption>Learning new facts about a penguin. Error is the distance between the model's next-word
+          distribution and the correct one; lower is better. (A) Error on the new facts. (B) Error on old
+          knowledge. The episodic store (solid line) learns faster than fine-tuning (dashed line) and does not
+          disturb old knowledge.</figcaption>
+        </figure>
+
+        <p>A first version of consolidation also works. When the store is replayed into the language model over
+        five nights, the model's own error on the new facts falls from 0.41 to 0.09. If old knowledge is
+        protected by sentences the model generates itself, its error on old knowledge stays at 0.03. Without
+        that protection it rises to 0.13.</p>
+
+        <figure>
+          <a href="assets/research/cls_consolidation.png" title="Open the full-size figure"><img src="assets/research/cls_consolidation.png" alt="Three line charts showing error over five nights of consolidation" loading="lazy"></a>
+          <figcaption>Consolidation by replay over five nights. (A) The language model alone learns the new
+          facts. (B) Old knowledge is damaged when only new memories are replayed (grey) and is preserved when
+          replay is interleaved with self-generated old sentences (black). (C) The language model and store
+          together.</figcaption>
+        </figure>
+
+        <p><strong>Why it matters.</strong> Agents that work over long horizons need memory that turns into
+        knowledge. This project offers a principled account of what to store, what to replay, and when to
+        forget.</p>
+      </article>
+
+      <article class="project" id="inflation">
+        <h3>Confidence inflation: a metacognitive illusion in reasoning LLMs</h3>
+        <p class="meta">Manuscript in preparation · with Aaron S. Benjamin</p>
+
+        <p><strong>The problem.</strong> People become more confident in an answer simply by stating it again,
+        even when they have learned nothing new. Psychologists call this confidence inflation. Reasoning models
+        write out their thinking and then state a conclusion before they answer. Does stating the conclusion
+        inflate the model's confidence in the same way?</p>
+
+        <p><strong>The approach.</strong> I sampled 12,479 reasoning traces from Qwen3-8B and Qwen3-32B on
+        two-option medical diagnosis questions. To follow confidence as reasoning unfolds, I developed a
+        truncation readout: the thinking is closed after each sentence and the model's log-odds for the two
+        answers are read at that point. I then recomputed and masked attention at the position where the model
+        writes its answer.</p>
+
+        <p><strong>What I found.</strong> Confidence stays low through most of the reasoning and jumps when the
+        model writes its conclusion sentence, by a median of 2.3 nats in both models. The jump is larger than
+        nine in ten of the changes made by earlier sentences. It is strongest after short reasoning and shrinks
+        by about 0.65 nats each time the reasoning doubles in length.</p>
+
+        <figure>
+          <a href="assets/research/ci_trajectories.png" title="Open the full-size figure"><img src="assets/research/ci_trajectories.png" alt="Six line charts of confidence across reasoning traces of different lengths in two models" loading="lazy"></a>
+          <figcaption>Confidence in the final answer along three reasoning traces of one question, for each
+          model. Each dot is a readout after one sentence. The open circle is just before the conclusion
+          sentence and the filled circle is just after it. The jump shrinks as reasoning gets longer.</figcaption>
+        </figure>
+
+        <p>The jump comes from the conclusion sentence itself. That sentence is about 1 percent of the tokens
+        but receives 7 to 9 percent of the answer's attention. Hiding it from the answer removes the jump and
+        leaves accuracy unchanged. Hiding random earlier sentences of the same length does nothing.</p>
+
+        <figure>
+          <a href="assets/research/ci_masking.png" title="Open the full-size figure"><img src="assets/research/ci_masking.png" alt="Dot plot of confidence under four masking conditions in two models" loading="lazy"></a>
+          <figcaption>Causal attention masking. Hiding the conclusion sentence from the answer lowers confidence
+          to the level of a trace whose conclusion was never written. Hiding random earlier sentences changes
+          nothing.</figcaption>
+        </figure>
+
+        <p><strong>Why it matters.</strong> Part of a reasoning model's confidence reflects its own commitment,
+        not its evidence. That is a risk for calibration and for people who rely on a model's confidence when
+        deciding whether to trust its answer.</p>
+      </article>
+
+      <article class="project" id="tools">
+        <h3>Tool use and metacognition in LLM agents</h3>
+        <p class="meta">Manuscript in preparation · with Aaron S. Benjamin</p>
+
+        <p><strong>The problem.</strong> People who have just searched the internet answer later questions from
+        memory with more precision, as if the search engine had raised the bar for a good answer. Language
+        models now use search tools all the time. Does using a tool change how a model judges what it can answer
+        on its own?</p>
+
+        <p><strong>The approach.</strong> I adapted the human paradigm to two OpenAI GPT-6 models. In the first
+        block a model answers questions with a search tool, from memory with feedback, or from memory alone. In
+        the second block every model answers new questions without the tool. The study has 8 conditions over
+        158 SimpleQA Verified items.</p>
+
+        <p><strong>What I found.</strong> The effect runs opposite to the human one. After searching, both
+        models reported lower confidence, and neither became less accurate. One model also expected to get about
+        7 of 20 questions right when it actually got about 13. Follow-up conditions show that the drop does not
+        come from seeing correct answers or from losing the tool. It depends on the model keeping a record of
+        its past searches in the conversation.</p>
+
+        <figure>
+          <a href="assets/research/tool_confidence.png" title="Open the full-size figure"><img src="assets/research/tool_confidence.png" alt="Three bar charts of confidence, overconfidence and expected score after search, memory and control conditions" loading="lazy"></a>
+          <figcaption>Second-block results by condition for the two models. Left: mean confidence. Middle:
+          confidence minus accuracy. Right: how many of the 20 questions the model expected to get right,
+          against how many it did (black bars).</figcaption>
+        </figure>
+
+        <p><strong>Why it matters.</strong> An agent's sense of what it knows shifts with its tool history, not
+        only with its knowledge. That affects when an agent asks for help, when it defers to a tool, and how it
+        reports uncertainty to a human partner.</p>
+      </article>
+
+      <article class="project" id="semantics">
+        <h3>Behavior versus representation in LLM semantics</h3>
+        <p class="meta">Manuscript in preparation · with R. Ozcan and Jon A. Willits</p>
+
+        <p><strong>The problem.</strong> Researchers often read a model's knowledge from the geometry of its
+        embeddings. Does that geometry agree with what the model actually does?</p>
+
+        <p><strong>The approach.</strong> I designed a fully counterbalanced probe battery in the style of a
+        psycholinguistics experiment: 192 nouns from 24 taxonomic categories, 1,152 probe-target pairs, and 30
+        prompt conditions. I tested 10 models from 6 families and compared two readouts on the same items: the
+        model's next-token probabilities and the similarity of its embeddings.</p>
+
+        <p><strong>What I found.</strong> The two readouts dissociate. Next-token behavior identifies category
+        relations at close to ceiling. Static embeddings do worse, and they are worst for superordinate
+        relations such as dog and animal.</p>
+
+        <figure>
+          <a href="assets/research/semantics_behavior_vs_embedding.png" title="Open the full-size figure"><img src="assets/research/semantics_behavior_vs_embedding.png" alt="Two panels of accuracy for cohyponym and superordinate relations, read from log probabilities and from embeddings" loading="lazy"></a>
+          <figcaption>Accuracy on the same probe pairs when read from the model's next-token probabilities
+          (left) and from its static embeddings (right).</figcaption>
+        </figure>
+
+        <p>The gap is not a lack of knowledge. When the same words are placed in a sentence, representations in
+        the middle layers recover most of the category structure.</p>
+
+        <figure>
+          <a href="assets/research/semantics_layers.png" title="Open the full-size figure"><img src="assets/research/semantics_layers.png" alt="Six panels of accuracy by layer for six language models" loading="lazy"></a>
+          <figcaption>Accuracy read from hidden states at each layer of six models. In-context representations
+          (solid and dashed lines) rise well above isolated static embeddings (dotted line) and approach the
+          level of the model's behavior (dash-dotted line).</figcaption>
+        </figure>
+
+        <p><strong>Why it matters.</strong> Conclusions about what a model knows depend on where you look. A
+        model can use knowledge that its static embeddings do not show.</p>
+      </article>
+
+      <article class="project" id="calibration">
+        <h3>Calibration and metacognition in neural classifiers</h3>
+        <p class="meta">Under review at Neural Computation · with Aaron S. Benjamin</p>
+
+        <p><strong>The problem.</strong> A classifier's stated confidence often fails to match how often it is
+        right, and the mismatch grows when test data drift away from training data.</p>
+
+        <p><strong>The approach.</strong> In human metacognition, the self-consistency theory says that
+        confidence reflects how consistently the same answer comes to mind. I turned this theory into a
+        confidence readout for neural networks: run the network several times with random units masked, and
+        measure how often the passes agree. I separated dropout during training from masking at test time across
+        30 trained networks.</p>
+
+        <p><strong>What I found.</strong> Training with dropout does not calibrate a network. Masking at test
+        time does, in an orderly dose-response pattern, and it cuts calibration error under severe distribution
+        shift by 66 percent. I also adapted measures of metacognitive efficiency from signal detection theory,
+        which separate how well calibrated a model is from how well its confidence tells right from wrong.</p>
+
+        <figure>
+          <a href="assets/research/calibration_shift.png" title="Open the full-size figure"><img src="assets/research/calibration_shift.png" alt="Four panels of calibration error against corruption severity at four test-time masking rates" loading="lazy"></a>
+          <figcaption>Calibration error of ResNet-18 as image corruption becomes more severe. Each panel is a
+          different rate of masking at test time, and each line is a different dropout rate during training.
+          More masking at test time flattens the rise in error. The training dropout rate makes little
+          difference.</figcaption>
+        </figure>
+
+        <p><strong>Why it matters.</strong> Calibrated uncertainty can be elicited at inference without
+        retraining, and ideas from human metacognition give a principled way to do it.</p>
+      </article>
+
+      <article class="project" id="rnn">
+        <h3>Learning mechanisms in recurrent networks</h3>
+        <p class="meta">CogSci 2026 · extended version under review at Cognitive Science · with Jon A. Willits</p>
+
+        <p><strong>The problem.</strong> Language is full of dependencies between words that are not next to
+        each other. Which kind of memory lets a network learn them: memory of its own internal state, as in an
+        Elman network, or memory of its own previous output, as in a Jordan network?</p>
+
+        <p><strong>The approach.</strong> I ran about 6,000 controlled simulations on artificial languages with
+        exactly known statistics. The simulations cross architecture (Elman, Jordan, LSTM, Transformer) with
+        learning rule (updates after each item, or after each sequence) under a hyperparameter protocol declared
+        in advance.</p>
+
+        <p><strong>What I found.</strong> Jordan networks trained on whole sequences solve dependencies that
+        were thought to be out of reach for networks that only remember their outputs. They do it by carrying
+        the needed information forward inside their own predictions, a mechanism I call output smuggling. A
+        causal test confirms it: replacing the fed-back output with a neutral average drops accuracy to chance,
+        and swapping in the output for the other category makes the network wrong on every trial.</p>
+
+        <div class="figure-pair">
+          <figure>
+            <a href="assets/research/rnn_accuracy.png" title="Open the full-size figure"><img src="assets/research/rnn_accuracy.png" alt="Line chart of accuracy over training epochs for Elman and Jordan networks" loading="lazy"></a>
+            <figcaption>Accuracy over training, averaged over 30 runs per condition. A network without
+            recurrence stays at the 75 percent ceiling that the adjacent word allows.</figcaption>
+          </figure>
+          <figure>
+            <a href="assets/research/rnn_intervention.png" title="Open the full-size figure"><img src="assets/research/rnn_intervention.png" alt="Bar chart of accuracy under four interventions on the Jordan network's feedback" loading="lazy"></a>
+            <figcaption>Causal test of output smuggling in 30 trained Jordan networks. Clamping the feedback
+            drops accuracy to chance, and swapping it reverses the prediction.</figcaption>
+          </figure>
+        </div>
+
+        <p><strong>Why it matters.</strong> The same network can find very different solutions depending on how
+        it is trained. No configuration I tested shows the advantage that human learners get from variable
+        intervening material, which marks a concrete gap between these models and people.</p>
+      </article>
+    </section>
+
+    <section id="publications">
+      <h2>Publications</h2>
+
+      <h3 class="group">Conference proceedings</h3>
+      <ul class="pubs">
+        <li>
+          <span class="title">Comparing inherent learning capabilities of recurrent neural networks</span>
+          <span class="authors"><u>Jingfeng Zhang</u>, Jon A. Willits</span>
+          <span class="venue">Proceedings of the Annual Meeting of the Cognitive Science Society, 2026</span>
+        </li>
+        <li>
+          <span class="title">Distributional language models and the representation of multiple kinds of semantic relations</span>
+          <span class="authors"><u>Jingfeng Zhang</u>, Jon A. Willits</span>
+          <span class="venue">Proceedings of the Annual Meeting of the Cognitive Science Society, 2024</span>
+        </li>
+      </ul>
+
+      <h3 class="group">Under review</h3>
+      <ul class="pubs">
+        <li>
+          <span class="title">A comparison of means of scaling confidence assessments from neural network classification models</span>
+          <span class="authors"><u>Jingfeng Zhang</u>, Aaron S. Benjamin</span>
+          <span class="venue">Under review at Neural Computation</span>
+        </li>
+        <li>
+          <span class="title">Comparing inherent learning capabilities of recurrent neural networks (extended version)</span>
+          <span class="authors"><u>Jingfeng Zhang</u>, Jon A. Willits</span>
+          <span class="venue">Under review at Cognitive Science</span>
+        </li>
+      </ul>
+
+      <h3 class="group">In preparation</h3>
+      <ul class="pubs">
+        <li>
+          <span class="title">Confidence inflation in reasoning models</span>
+          <span class="authors"><u>Jingfeng Zhang</u>, Aaron S. Benjamin</span>
+        </li>
+        <li>
+          <span class="title">Does search &ldquo;raise the bar&rdquo; in LLMs?</span>
+          <span class="authors"><u>Jingfeng Zhang</u>, Aaron S. Benjamin</span>
+        </li>
+        <li>
+          <span class="title">Do LLM semantic judgments follow distributional geometry? Prompt and model effects in controlled category probes</span>
+          <span class="authors"><u>Jingfeng Zhang</u>, R. Ozcan, Jon A. Willits</span>
+        </li>
+      </ul>
+    </section>
+
+    <section id="software">
+      <h2>Software</h2>
+      <ul class="pubs">
+        <li>
+          <span class="title"><a href="https://github.com/cracrazjf/PsychAI">PsychAI</a></span>
+          <span class="authors">Author and maintainer, MIT license</span>
+          <span class="desc">A pip-installable PyTorch research framework: a declarative model builder, YAML experiment
+          configs, LoRA and 4-bit LLM finetuning, and per-layer representation hooks.</span>
+        </li>
+        <li>
+          <span class="title"><a href="https://nowander.fly.dev">Wander</a></span>
+          <span class="authors">Solo designer and developer</span>
+          <span class="desc">A deployed AI peer-support platform with an agentic LLM onboarding interviewer, safety
+          screening, a group-matching engine, and realtime chat.</span>
+        </li>
+      </ul>
+    </section>
+
+    <section id="honors">
+      <h2>Honors and Talks</h2>
+      <ul class="plain">
+        <li>William and Evelyn Hobson and Woodrow Fellowship, UIUC Graduate College, 2026</li>
+        <li>Departmental nominee, Apple Scholars in AIML PhD Fellowship, 2025</li>
+        <li>Talk, Annual Meeting of the Psychonomic Society, 2025</li>
+        <li>Talk, Annual Meeting of the Cognitive Science Society, 2023</li>
+      </ul>
+    </section>
+
+    <section id="teaching">
+      <h2>Teaching</h2>
+      <ul class="plain">
+        <li>Organizer and teaching assistant, AI for Science Workshop, UIUC, 2026 – present</li>
+        <li>Teaching assistant, PSYC 489 Neural Network Modeling, Spring 2026</li>
+        <li>Teaching assistant with full classroom-teaching responsibility, Brain and Cognition 100 and PSYC 100, 2022 – 2024</li>
+      </ul>
+    </section>
+
+    <footer class="site-footer">© 2026 Jingfeng Zhang</footer>
+  </main>
+</div>
+
+</body>
+</html>
